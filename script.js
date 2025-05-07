@@ -160,6 +160,6 @@ document.addEventListener('DOMContentLoaded', function () {
   
   setInterval(updateClock, 1000);
   setInterval(loadPrayerTimes, 60000);
-  setInterval(fetchPrayerTimes, 30000);
-  setInterval(refreshPosters, 30000);
+  setInterval(fetchPrayerTimes, 300000);
+  setInterval(refreshPosters, 300000);
 });
