@@ -138,14 +138,28 @@ document.addEventListener('DOMContentLoaded', function () {
     }, 60000);
   }
 
+  function fetchPrayerTimes() {
+    fetch(`prayer-times.json?t=${Date.now()}`)
+      .then(res => res.json())
+      .then(data => {
+        allData = data;
+        loadPrayerTimes();
+      });
+  }
+  
+  function refreshPosters() {
+    posterImages = [];
+    posterIndex = 0;
+    preloadAndCheckPosters();
+  }
+  
+  fetchPrayerTimes();
+  updateClock();
+  loadPrayerTimes();
   preloadAndCheckPosters();
-  fetch('prayer-times.json')
-    .then(res => res.json())
-    .then(data => {
-      allData = data;
-      updateClock();
-      loadPrayerTimes();
-      setInterval(updateClock, 1000);
-      setInterval(loadPrayerTimes, 60000);
-    });
+  
+  setInterval(updateClock, 1000);
+  setInterval(loadPrayerTimes, 60000);
+  setInterval(fetchPrayerTimes, 30000);
+  setInterval(refreshPosters, 30000);
 });
