@@ -33,7 +33,26 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('current-date').textContent = formattedDate.toUpperCase();
   }
   
+  function isJummahPeriod(todayData, tomorrowData) {
+    const now = new Date();
+    const day = now.getDay(); // 4 = Thursday, 5 = Friday
+    const nowMinutes = now.getHours() * 60 + now.getMinutes();
 
+    if (day === 4 && todayData?.dhuhr?.jamaat) {
+      const [h, m] = todayData.dhuhr.jamaat.split(':').map(Number);
+      const jummahStart = h * 60 + m + 5;
+      return nowMinutes >= jummahStart;
+    }
+
+    if (day === 5 && todayData?.dhuhr?.jamaat) {
+      const [h, m] = todayData.dhuhr.jamaat.split(':').map(Number);
+      const jummahEnd = h * 60 + m + 5;
+      return nowMinutes <= jummahEnd;
+    }
+  
+    return false;
+  }
+  
   function getStartTime(prayer, today, tomorrow) {
     const now = new Date();
     const nowMinutes = now.getHours() * 60 + now.getMinutes();
@@ -84,6 +103,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (!allData[todayStr] || !allData[tomorrowStr]) return;
 
+    const zuhrLabel = document.getElementById('zuhr-label');
+    if (zuhrLabel) {
+      zuhrLabel.textContent = isJummahPeriod(todayStr, tomorrowStr) ? 'JUMMAH' : 'DHUHR';
+    }
+    
     prayersOrder.forEach(prayer => {
       document.getElementById(`${prayer}-start`).textContent = getStartTime(prayer, todayStr, tomorrowStr);
       if (prayer !== 'sunrise') {
