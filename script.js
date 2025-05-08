@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (!document.getElementById('poster-overlay').style.display || document.getElementById('poster-overlay').style.display === 'none') {
         cyclePosters();
       }
-    }, 60000);
+    }, 40000);
   }
 
   function fetchPrayerTimes() {
