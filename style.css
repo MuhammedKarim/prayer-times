@@ -101,9 +101,11 @@ body {
   left: 0;
   width: 100vw;
   height: 100vh;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
   z-index: 9999;
   display: none;
-  overflow: hidden;
 }
 
 #poster-overlay::before {
