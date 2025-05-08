@@ -38,11 +38,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const nowMinutes = now.getHours() * 60 + now.getMinutes();
   
     const today = new Date(todayStr);
-    const day = today.getDay(); // 4 = Thursday, 5 = Friday
+    const day = today.getDay();
   
-    const tomorrow = new Date(today);
-    tomorrow.setDate(today.getDate() + 1);
-    const tomorrowStr = tomorrow.toISOString().split('T')[0];
+    const tomorrow = new Date(now);
+    tomorrow.setDate(now.getDate() + 1);
+
+    const tomorrowStr = tomorrow.getFullYear() + '-' +
+                    String(tomorrow.getMonth() + 1).padStart(2, '0') + '-' +
+                    String(tomorrow.getDate()).padStart(2, '0');
   
     const todayData = allData[todayStr];
     const tomorrowData = allData[tomorrowStr];
@@ -103,10 +106,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function loadPrayerTimes() {
     const now = new Date();
-    const todayStr = now.toISOString().split('T')[0];
+    const todayStr = now.getFullYear() + '-' +
+                 String(now.getMonth() + 1).padStart(2, '0') + '-' +
+                 String(now.getDate()).padStart(2, '0');
     const tomorrow = new Date(now);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const tomorrowStr = tomorrow.toISOString().split('T')[0];
+    tomorrow.setDate(now.getDate() + 1);
+    const tomorrowStr = tomorrow.getFullYear() + '-' +
+                    String(tomorrow.getMonth() + 1).padStart(2, '0') + '-' +
+                    String(tomorrow.getDate()).padStart(2, '0');
 
     if (!allData[todayStr] || !allData[tomorrowStr]) return;
 
