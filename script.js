@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
   function preloadAndCheckPosters() {
     let loaded = 0;
     for (let i = 1; i <= MAX_POSTERS; i++) {
-      const url = `posters/${i}.jpg?t=${Date.now()}`;
+      const url = `posters/${i}.jpg`;
       const img = new Image();
       img.onload = () => {
         posterImages.push(url);
