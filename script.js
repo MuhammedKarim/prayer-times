@@ -117,11 +117,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function cyclePosters() {
     if (posterImages.length === 0) return;
-  
+
     const overlay = document.getElementById('poster-overlay');
-    overlay.style.backgroundImage = `url(${posterImages[posterIndex % posterImages.length]})`;
-    overlay.style.display = 'block';
+    const imgUrl = posterImages[posterIndex % posterImages.length];
   
+    overlay.style.display = 'block';
+    overlay.style.setProperty('--poster-image', `url(${imgUrl})`);
+  
+    overlay.style.setProperty('--poster-image', `url(${imgUrl})`);
+    overlay.style.backgroundImage = `url(${imgUrl})`; // fallback if needed
+    overlay.style.setProperty('--poster-image', `url(${imgUrl})`);
+    overlay.querySelector('::before')?.style.setProperty('background-image', `url(${imgUrl})`);
+    overlay.querySelector('::after')?.style.setProperty('background-image', `url(${imgUrl})`);
+
     setTimeout(() => {
       overlay.style.display = 'none';
       posterIndex++;
