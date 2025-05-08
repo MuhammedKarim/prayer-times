@@ -33,21 +33,28 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('current-date').textContent = formattedDate.toUpperCase();
   }
   
-  function isJummahPeriod(todayData, tomorrowData) {
+  function isJummahPeriod(todayStr) {
     const now = new Date();
-    const day = now.getDay();
     const nowMinutes = now.getHours() * 60 + now.getMinutes();
-
+  
+    const today = new Date(todayStr);
+    const day = today.getDay(); // 4 = Thursday, 5 = Friday
+  
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+    const tomorrowStr = tomorrow.toISOString().split('T')[0];
+  
+    const todayData = allData[todayStr];
+    const tomorrowData = allData[tomorrowStr];
+  
     if (day === 4 && todayData?.dhuhr?.jamaat) {
       const [h, m] = todayData.dhuhr.jamaat.split(':').map(Number);
-      const jummahStart = h * 60 + m + 5;
-      return nowMinutes >= jummahStart;
+      return nowMinutes >= h * 60 + m + 5;
     }
-
+  
     if (day === 5 && todayData?.dhuhr?.jamaat) {
       const [h, m] = todayData.dhuhr.jamaat.split(':').map(Number);
-      const jummahEnd = h * 60 + m + 5;
-      return nowMinutes <= jummahEnd;
+      return nowMinutes <= h * 60 + m + 5;
     }
   
     return false;
@@ -103,10 +110,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (!allData[todayStr] || !allData[tomorrowStr]) return;
 
-    const zuhrLabel = document.getElementById('zuhr-label');
-    if (zuhrLabel) {
-      zuhrLabel.textContent = isJummahPeriod(todayStr, tomorrowStr) ? 'JUMMAH' : 'DHUHR';
-    }
+    document.getElementById('dhuhr-label').textContent = isJummahPeriod(todayStr) ? 'JUMMAH' : 'DHUHR';
     
     prayersOrder.forEach(prayer => {
       document.getElementById(`${prayer}-start`).textContent = getStartTime(prayer, todayStr, tomorrowStr);
