@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
   
   function isJummahPeriod(todayData, tomorrowData) {
     const now = new Date();
-    const day = now.getDay(); // 4 = Thursday, 5 = Friday
+    const day = now.getDay();
     const nowMinutes = now.getHours() * 60 + now.getMinutes();
 
     if (day === 4 && todayData?.dhuhr?.jamaat) {
