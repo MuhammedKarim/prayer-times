@@ -167,14 +167,20 @@ function initPrayerTimes() {
     }, 10000);
   }
   
+  let posterCycleInterval = null;
   function startPrayerPosterCycle() {
     if (posterImages.length === 0) return;
-  
-    setInterval(() => {
-      if (!document.getElementById('poster-overlay').style.display || document.getElementById('poster-overlay').style.display === 'none') {
+    
+    if (posterCycleInterval) {
+      clearInterval(posterCycleInterval);
+    }
+
+    posterCycleInterval = setInterval(() => {
+      const overlay = document.getElementById('poster-overlay');
+      if (!overlay.style.display || overlay.style.display === 'none') {
         cyclePosters();
       }
-    }, 60000);
+    }, 40000);
   }
 
   function fetchPrayerTimes() {
