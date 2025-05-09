@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>Prayer Times</title>
-  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -11,7 +10,7 @@
 
     <div class="top">
       <div class="clock" id="current-time">12:00</div>
-      <div class="date" id="current-date">Monday 28th April</div>
+      <div class="date" id="current-date">Monday 1st January</div>
     </div>
 
     <div class="divider"></div>
@@ -24,33 +23,33 @@
       </div>
       <div class="prayer-row">
         <div class="prayer-name">FAJR</div>
-        <div class="prayer-time" id="fajr-start"></div>
-        <div class="jamaat-time" id="fajr-jamaat"></div>
+        <div class="prayer-time" id="fajr-start">12:00</div>
+        <div class="jamaat-time" id="fajr-jamaat">12:00</div>
       </div>
       <div class="prayer-row">
         <div class="prayer-name">SUNRISE</div>
-        <div class="prayer-time" id="sunrise-start"></div>
+        <div class="prayer-time" id="sunrise-start">12:00</div>
         <div class="jamaat-time">-</div>
       </div>
       <div class="prayer-row">
         <div class="prayer-name" id="dhuhr-label">DHUHR</div>
-        <div class="prayer-time" id="dhuhr-start"></div>
-        <div class="jamaat-time" id="dhuhr-jamaat"></div>
+        <div class="prayer-time" id="dhuhr-start">12:00</div>
+        <div class="jamaat-time" id="dhuhr-jamaat">12:00</div>
       </div>
       <div class="prayer-row">
         <div class="prayer-name">ASR</div>
-        <div class="prayer-time" id="asr-start"></div>
-        <div class="jamaat-time" id="asr-jamaat"></div>
+        <div class="prayer-time" id="asr-start">12:00</div>
+        <div class="jamaat-time" id="asr-jamaat">12:00</div>
       </div>
       <div class="prayer-row">
         <div class="prayer-name">MAGHRIB</div>
-        <div class="prayer-time" id="maghrib-start"></div>
-        <div class="jamaat-time" id="maghrib-jamaat"></div>
+        <div class="prayer-time" id="maghrib-start">12:00</div>
+        <div class="jamaat-time" id="maghrib-jamaat">12:00</div>
       </div>
       <div class="prayer-row">
         <div class="prayer-name">ISHA</div>
-        <div class="prayer-time" id="isha-start"></div>
-        <div class="jamaat-time" id="isha-jamaat"></div>
+        <div class="prayer-time" id="isha-start">12:00</div>
+        <div class="jamaat-time" id="isha-jamaat">12:00</div>
       </div>
     </div>
 
@@ -60,7 +59,18 @@
     <img src="" alt="Poster" class="poster-img">
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    const timestamp = Date.now();
+
+    const css = document.createElement('link');
+    css.rel = 'stylesheet';
+    css.href = `style.css?t=${timestamp}`;
+    document.head.appendChild(css);
+
+    const js = document.createElement('script');
+    js.src = `script.js?t=${timestamp}`;
+    document.body.appendChild(js);
+  </script>
   
 </body>
 </html>
