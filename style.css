@@ -116,7 +116,7 @@ body {
   background-image: var(--poster-url);
   background-size: cover;
   background-position: center;
-  filter: blur(25px);
+  filter: blur(35px);
   transform: scale(1.1);
   z-index: 0;
 }
