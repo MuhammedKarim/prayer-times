@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('current-date').textContent = formattedDate.toUpperCase();
   }
   
-  function isJummahPeriod(todayStr) {
+  function isJumuahPeriod(todayStr) {
     const now = new Date();
     const nowMinutes = now.getHours() * 60 + now.getMinutes();
   
@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (!allData[todayStr] || !allData[tomorrowStr]) return;
 
-    document.getElementById('dhuhr-label').textContent = isJummahPeriod(todayStr) ? 'JUMMAH' : 'DHUHR';
+    document.getElementById('dhuhr-label').textContent = isJumuahPeriod(todayStr) ? 'JUMUAH' : 'DHUHR';
     
     prayersOrder.forEach(prayer => {
       document.getElementById(`${prayer}-start`).textContent = getStartTime(prayer, todayStr, tomorrowStr);
@@ -152,19 +152,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function cyclePosters() {
     if (posterImages.length === 0) return;
-
+  
     const overlay = document.getElementById('poster-overlay');
+    const img = overlay.querySelector('.poster-img');
     const imgUrl = posterImages[posterIndex % posterImages.length];
   
     overlay.style.display = 'block';
-    overlay.style.setProperty('--poster-image', `url(${imgUrl})`);
+    overlay.style.setProperty('--poster-url', `url(${imgUrl})`);
+    img.src = imgUrl;
   
-    overlay.style.setProperty('--poster-image', `url(${imgUrl})`);
-    overlay.style.backgroundImage = `url(${imgUrl})`; // fallback if needed
-    overlay.style.setProperty('--poster-image', `url(${imgUrl})`);
-    overlay.querySelector('::before')?.style.setProperty('background-image', `url(${imgUrl})`);
-    overlay.querySelector('::after')?.style.setProperty('background-image', `url(${imgUrl})`);
-
     setTimeout(() => {
       overlay.style.display = 'none';
       posterIndex++;
