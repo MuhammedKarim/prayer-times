@@ -174,7 +174,7 @@ function initPrayerTimes() {
       if (!document.getElementById('poster-overlay').style.display || document.getElementById('poster-overlay').style.display === 'none') {
         cyclePosters();
       }
-    }, 40000);
+    }, 60000);
   }
 
   function fetchPrayerTimes() {
