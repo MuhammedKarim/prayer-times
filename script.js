@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function () {
+function initPrayerTimes() {
   const prayersOrder = ['fajr', 'sunrise', 'dhuhr', 'asr', 'maghrib', 'isha'];
   let allData = {};
 
@@ -214,4 +214,4 @@ document.addEventListener('DOMContentLoaded', function () {
   setInterval(fetchPrayerTimes, 300000);
   setInterval(refreshPosters, 300000);
   setInterval(checkVersionAndReload, 60000);
-});
+}
