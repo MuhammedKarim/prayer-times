@@ -192,6 +192,18 @@ document.addEventListener('DOMContentLoaded', function () {
     preloadAndCheckPosters();
   }
   
+  let currentVersion = null;
+  function checkVersionAndReload() {
+    fetch(`version.json?t=${Date.now()}`)
+      .then(res => res.json())
+      .then(data => {
+        if (currentVersion && data.version !== currentVersion) {
+          location.reload(true);
+        }
+        currentVersion = data.version;
+      });
+  }
+  
   fetchPrayerTimes();
   updateClock();
   loadPrayerTimes();
@@ -201,4 +213,5 @@ document.addEventListener('DOMContentLoaded', function () {
   setInterval(loadPrayerTimes, 60000);
   setInterval(fetchPrayerTimes, 300000);
   setInterval(refreshPosters, 300000);
+  setInterval(checkVersionAndReload, 60000);
 });
