@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
   function preloadAndCheckPosters() {
     let loaded = 0;
     for (let i = 1; i <= MAX_POSTERS; i++) {
-      const url = `posters/${i}.jpg`;
+      const url = `posters/${i}.jpg?t=${Date.now()}`;
       const img = new Image();
       img.onload = () => {
         posterImages.push(url);
@@ -193,6 +193,16 @@ document.addEventListener('DOMContentLoaded', function () {
   }
   
   let currentVersion = null;
+  function checkVersionAndReload() {
+    fetch(`version.json?t=${Date.now()}`)
+      .then(res => res.json())
+      .then(data => {
+        if (currentVersion && data.version !== currentVersion) {
+          location.reload(true);
+        }
+        currentVersion = data.version;
+      });
+  }
   
   fetchPrayerTimes();
   updateClock();
@@ -203,4 +213,5 @@ document.addEventListener('DOMContentLoaded', function () {
   setInterval(loadPrayerTimes, 60000);
   setInterval(fetchPrayerTimes, 300000);
   setInterval(refreshPosters, 300000);
+  setInterval(checkVersionAndReload, 60000);
 });
