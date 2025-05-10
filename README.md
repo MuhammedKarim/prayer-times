@@ -18,7 +18,7 @@ You can do this **from the GitHub website** on your **computer or phone**.
 
 ### 1️⃣ How to Change a Prayer Time
 
-For example, you want to change **Maghrib Jamaat time on June 15th**.
+For example, you want to change **Dhuhr Jamaat time on June 15th**.
 
 #### Steps:
 1. Go to the file: [`prayer-times.json`](./prayer-times.json)
