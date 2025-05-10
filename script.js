@@ -183,6 +183,18 @@ function initPrayerTimes() {
     }, 40000);
   }
 
+  function checkLiveStatusAndToggleOverlay() {
+    fetch('https://live-status.muhammedkarim.workers.dev/')
+      .then(res => res.json())
+      .then(status => {
+        const overlay = document.getElementById('dim-overlay');
+        overlay.style.display = status.isLive ? 'block' : 'none';
+      })
+      .catch(err => {
+        console.error('Failed to fetch live status:', err);
+      });
+  }
+  
   function fetchPrayerTimes() {
     fetch(`prayer-times.json?t=${Date.now()}`)
       .then(res => res.json())
@@ -214,10 +226,12 @@ function initPrayerTimes() {
   updateClock();
   loadPrayerTimes();
   preloadAndCheckPosters();
+  checkLiveStatusAndToggleOverlay();
   
   setInterval(updateClock, 1000);
   setInterval(loadPrayerTimes, 60000);
   setInterval(fetchPrayerTimes, 300000);
   setInterval(refreshPosters, 300000);
+  setInterval(checkLiveStatusAndToggleOverlay, 10000);
   setInterval(checkVersionAndReload, 60000);
 }
