@@ -10,7 +10,7 @@
 These instructions will help you:
 1. ✏️ Edit a specific **prayer time**
 2. 🖼️ **Add or remove** posters (images)
-3. 🔄 Update `version.json` to **push your changes live**
+3. 🔄 Update `version.json` to **push your changes live Immediately**
 
 You can do this **from the GitHub website** on your **computer or phone**.
 
@@ -62,24 +62,25 @@ These are full-screen images that display between prayer times.
 
 ---
 
-### 3️⃣ How to Push Changes Live
+### 3️⃣ How to Push Changes Live Immediately
 
 Any time you:
 - Edit `prayer-times.json`
 - Add/remove posters
 
-You **must update the `version.json`** file so the live screen refreshes.
+The system will automatically update **within 10 minutes**, even if you don’t do anything else.
 
-#### Steps:
+However, if the update is **urgent** and you want it to appear on the live screen **within 2 minutes**, you should also update the `version.json` file to force a refresh.
+
+#### Steps to Trigger Immediate Refresh:
 1. Open [`version.json`](./version.json)
 2. Click the **pencil icon** ✏️
 3. Change the version from `"1"` to `"2"`, or from `"2"` to `"1"` (just switch between them).
-
-Example:
-```json
-{ "version": "1" }
-```
-
+   
+   Example:
+   ```json
+   { "version": "1" }
+   ```
 4. Click **“Commit changes”**.
 
-That’s it! The screen at the masjid will automatically reload and fetch your update within a couple of minutes.
+That’s it! The screen at the masjid will detect the version change and automatically reload to apply your updates almost immediately.
