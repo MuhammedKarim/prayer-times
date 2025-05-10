@@ -68,9 +68,9 @@ Any time you:
 - Edit `prayer-times.json`
 - Add/remove posters
 
-The system will automatically update **within 10 minutes**, even if you don’t do anything else.
+The system will automatically update **within 5 minutes**, even if you don’t do anything else.
 
-However, if the update is **urgent** and you want it to appear on the live screen **within 2 minutes**, you should also update the `version.json` file to force a refresh.
+However, if the update is **urgent** and you want it to appear on the live screen **within a minute**, you should also update the `version.json` file to force a refresh.
 
 #### Steps to Trigger Immediate Refresh:
 1. Open [`version.json`](./version.json)
