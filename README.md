@@ -18,7 +18,7 @@ You can do this **from the GitHub website** on your **computer or phone**.
 
 ### 1️⃣ How to Change a Prayer Time
 
-For example, you want to change **Dhuhr Jamaat time on June 15th**.
+For example, you want to change **Dhuhr Jamat time on June 15th**.
 
 #### Steps:
 1. Go to the file: [`prayer-times.json`](./prayer-times.json)
@@ -26,11 +26,11 @@ For example, you want to change **Dhuhr Jamaat time on June 15th**.
 3. Find the date, e.g. `"2025-06-15"` (Use Ctrl+F or "Find" to search).
 4. You will see something like:
    ```jsonc
-   "2025-06-15": { ... "dhuhr": { "start": "13:06", "jamaat": "13:30" }, ... }
+   "2025-06-15": { ... "dhuhr": { "start": "13:06", "jamat": "13:30" }, ... }
    ```
-5. Edit the **"jamaat"** value as needed. For example:
+5. Edit the **"jamat"** value as needed. For example:
    ```json
-   "jamaat": "13:15"
+   "jamat": "13:15"
    ```
 6. Click **“Commit changes”**, then confirm by clicking the green button again.
 
