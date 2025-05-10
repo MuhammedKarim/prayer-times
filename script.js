@@ -50,13 +50,13 @@ function initPrayerTimes() {
     const todayData = allData[todayStr];
     const tomorrowData = allData[tomorrowStr];
   
-    if (day === 4 && todayData?.dhuhr?.jamaat) {
-      const [h, m] = todayData.dhuhr.jamaat.split(':').map(Number);
+    if (day === 4 && todayData?.dhuhr?.jamat) {
+      const [h, m] = todayData.dhuhr.jamat.split(':').map(Number);
       return nowMinutes >= h * 60 + m + 5;
     }
   
-    if (day === 5 && todayData?.dhuhr?.jamaat) {
-      const [h, m] = todayData.dhuhr.jamaat.split(':').map(Number);
+    if (day === 5 && todayData?.dhuhr?.jamat) {
+      const [h, m] = todayData.dhuhr.jamat.split(':').map(Number);
       return nowMinutes <= h * 60 + m + 5;
     }
   
@@ -82,25 +82,25 @@ function initPrayerTimes() {
     }
   }
 
-  function getJamaatTime(prayer, today, tomorrow) {
+  function getJamatTime(prayer, today, tomorrow) {
     const now = new Date();
     const nowMinutes = now.getHours() * 60 + now.getMinutes();
 
     const todayData = allData[today]?.[prayer];
     const tomorrowData = allData[tomorrow]?.[prayer];
 
-    const todayJamaat = todayData?.jamaat || todayData?.start;
-    const tomorrowJamaat = tomorrowData?.jamaat || tomorrowData?.start;
+    const todayJamat = todayData?.jamat || todayData?.start;
+    const tomorrowJamat = tomorrowData?.jamat || tomorrowData?.start;
 
-    if (!todayJamaat) return formatTo12Hour(tomorrowJamaat) || '--';
+    if (!todayJamat) return formatTo12Hour(tomorrowJamat) || '--';
 
-    const [h, m] = todayJamaat.split(':').map(Number);
-    const jamaatMinutes = h * 60 + m + 5;
+    const [h, m] = todayJamat.split(':').map(Number);
+    const jamatMinutes = h * 60 + m + 5;
 
-    if (nowMinutes < jamaatMinutes) {
-      return formatTo12Hour(todayJamaat);
+    if (nowMinutes < jamatMinutes) {
+      return formatTo12Hour(todayJamat);
     } else {
-      return formatTo12Hour(tomorrowJamaat || todayJamaat);
+      return formatTo12Hour(tomorrowJamat || todayJamat);
     }
   }
 
@@ -122,7 +122,7 @@ function initPrayerTimes() {
     prayersOrder.forEach(prayer => {
       document.getElementById(`${prayer}-start`).textContent = getStartTime(prayer, todayStr, tomorrowStr);
       if (prayer !== 'sunrise') {
-        document.getElementById(`${prayer}-jamaat`).textContent = getJamaatTime(prayer, todayStr, tomorrowStr);
+        document.getElementById(`${prayer}-jamat`).textContent = getJamatTime(prayer, todayStr, tomorrowStr);
       }
     });
   }
@@ -194,7 +194,7 @@ function initPrayerTimes() {
         console.error('Failed to fetch live status:', err);
       });
   }
-  
+
   function fetchPrayerTimes() {
     fetch(`prayer-times.json?t=${Date.now()}`)
       .then(res => res.json())
