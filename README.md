@@ -25,7 +25,7 @@ For example, you want to change **Maghrib Jamaat time on June 15th**.
 2. Click the **pencil icon** ✏️ in the top right to edit.
 3. Find the date, e.g. `"2025-06-15"` (Use Ctrl+F or "Find" to search).
 4. You will see something like:
-   ```json
+   ```jsonc
    "2025-06-15": { ... "dhuhr": { "start": "13:06", "jamaat": "13:30" }, ... }
    ```
 5. Edit the **"jamaat"** value as needed. For example:
