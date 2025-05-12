@@ -188,7 +188,8 @@ function initPrayerTimes() {
       .then(res => res.json())
       .then(status => {
         const overlay = document.getElementById('dim-overlay');
-        overlay.style.display = status.isLive ? 'block' : 'none';
+        const shouldShowOverlay = status.isLive && status.kalimat !== 'kk-bayan'
+        overlay.style.display = shouldShowOverlay ? 'block' : 'none';      
       })
       .catch(err => {
         console.error('Failed to fetch live status:', err);
