@@ -180,7 +180,7 @@ function initPrayerTimes() {
       if (!overlay.style.display || overlay.style.display === 'none') {
         cyclePosters();
       }
-    }, 15000);
+    }, 60000);
   }
 
   function checkLiveStatusAndToggleOverlay() {
