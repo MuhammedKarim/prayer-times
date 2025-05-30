@@ -39,16 +39,8 @@ function initPrayerTimes() {
   
     const today = new Date(todayStr);
     const day = today.getDay();
-  
-    const tomorrow = new Date(now);
-    tomorrow.setDate(now.getDate() + 1);
-
-    const tomorrowStr = tomorrow.getFullYear() + '-' +
-                    String(tomorrow.getMonth() + 1).padStart(2, '0') + '-' +
-                    String(tomorrow.getDate()).padStart(2, '0');
-  
+    
     const todayData = allData[todayStr];
-    const tomorrowData = allData[tomorrowStr];
   
     if (day === 4 && todayData?.dhuhr?.jamat) {
       const [h, m] = todayData.dhuhr.jamat.split(':').map(Number);
@@ -73,7 +65,8 @@ function initPrayerTimes() {
     if (!todayStart) return formatTo12Hour(tomorrowStart) || '--';
 
     const [h, m] = todayStart.split(':').map(Number);
-    const prayerMinutes = h * 60 + m + 5;
+    const offset = prayer === 'sunrise' ? 15 : 5;
+    const prayerMinutes = h * 60 + m + offset;
 
     if (nowMinutes < prayerMinutes) {
       return formatTo12Hour(todayStart);
@@ -127,24 +120,53 @@ function initPrayerTimes() {
     });
   }
 
-
   const MAX_POSTERS = 5;
   let posterImages = [];
   let posterIndex = 0;
 
+  function shouldIncludePhotosPoster() {
+    const now = new Date();
+    const day = now.getDay();
+    const minutes = now.getHours() * 60 + now.getMinutes();
+
+    if (day === 4 && minutes >= 1260) return true;
+    if (day === 5 && minutes <= 840) return true;
+    return false;
+  }
+
   function preloadAndCheckPosters() {
     let loaded = 0;
-    for (let i = 1; i <= MAX_POSTERS; i++) {
+    posterImages = [];
+
+    const max = MAX_POSTERS;
+    const total = shouldIncludePhotosPoster() ? max + 1 : max;
+
+    for (let i = 1; i <= max; i++) {
       const url = `posters/${i}.jpg?t=${Date.now()}`;
       const img = new Image();
       img.onload = () => {
         posterImages.push(url);
         loaded++;
-        if (loaded === MAX_POSTERS) startPrayerPosterCycle();
+        if (loaded === total) startPrayerPosterCycle();
       };
       img.onerror = () => {
         loaded++;
-        if (loaded === MAX_POSTERS) startPrayerPosterCycle();
+        if (loaded === total) startPrayerPosterCycle();
+      };
+      img.src = url;
+    }
+
+    if (shouldIncludePhotosPoster()) {
+      const url = `posters/photos.jpg?t=${Date.now()}`;
+      const img = new Image();
+      img.onload = () => {
+        posterImages.push(url);
+        loaded++;
+        if (loaded === total) startPrayerPosterCycle();
+      };
+      img.onerror = () => {
+        loaded++;
+        if (loaded === total) startPrayerPosterCycle();
       };
       img.src = url;
     }
@@ -152,28 +174,30 @@ function initPrayerTimes() {
 
   function cyclePosters() {
     if (posterImages.length === 0) return;
-  
+
     const overlay = document.getElementById('poster-overlay');
     const img = overlay.querySelector('.poster-img');
     const imgUrl = posterImages[posterIndex % posterImages.length];
-  
-    overlay.style.display = 'block';
+
     overlay.style.setProperty('--poster-url', `url(${imgUrl})`);
     img.src = imgUrl;
-  
+    overlay.style.display = 'block';
     setTimeout(() => {
-      overlay.style.display = 'none';
-      posterIndex++;
+      overlay.style.opacity = '1';
+    }, 10);
+
+    setTimeout(() => {
+      overlay.style.opacity = '0';
+      setTimeout(() => {
+        overlay.style.display = 'none';
+        posterIndex++;
+      }, 1500);
     }, 10000);
   }
   
   let posterCycleInterval = null;
   function startPrayerPosterCycle() {
-    if (posterImages.length === 0) return;
-    
-    if (posterCycleInterval) {
-      clearInterval(posterCycleInterval);
-    }
+    if (posterImages.length === 0 || posterCycleInterval) return;
 
     posterCycleInterval = setInterval(() => {
       const overlay = document.getElementById('poster-overlay');
@@ -184,12 +208,15 @@ function initPrayerTimes() {
   }
 
   function checkLiveStatusAndToggleOverlay() {
-    fetch('https://live-status.muhammedkarim.workers.dev/')
+    fetch('https://live-status.muhammedkarim.workers.dev')
       .then(res => res.json())
       .then(status => {
-        const overlay = document.getElementById('dim-overlay');
-        const shouldShowOverlay = status.isLive && status.kalimat !== 'kk-bayan'
-        overlay.style.display = shouldShowOverlay ? 'block' : 'none';      
+        const dimOverlay = document.getElementById('dim-overlay');
+
+        const shouldShowDim = status.isLive && status.kalimat !== 'kk-bayan';
+        dimOverlay.style.display = shouldShowDim ? 'block' : 'none';
+        dimOverlay.style.opacity = shouldShowDim ? '1' : '0';
+
       })
       .catch(err => {
         console.error('Failed to fetch live status:', err);
