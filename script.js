@@ -192,7 +192,7 @@ function initPrayerTimes() {
         overlay.style.display = 'none';
         posterIndex++;
       }, 1500);
-    }, 20000);
+    }, 10000);
   }
   
   let posterCycleInterval = null;
@@ -204,7 +204,7 @@ function initPrayerTimes() {
       if (!overlay.style.display || overlay.style.display === 'none') {
         cyclePosters();
       }
-    }, 25000);
+    }, 60000);
   }
 
   function checkLiveStatusAndToggleOverlay() {
@@ -213,7 +213,7 @@ function initPrayerTimes() {
       .then(status => {
         const dimOverlay = document.getElementById('dim-overlay');
 
-        const shouldShowDim = !status.isLive && status.kalimat !== 'kk-bayan';
+        const shouldShowDim = status.isLive && status.kalimat !== 'kk-bayan';
         dimOverlay.style.display = shouldShowDim ? 'block' : 'none';
         dimOverlay.style.opacity = shouldShowDim ? '1' : '0';
 
