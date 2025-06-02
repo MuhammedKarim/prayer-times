@@ -192,7 +192,7 @@ function initPrayerTimes() {
         overlay.style.display = 'none';
         posterIndex++;
       }, 1500);
-    }, 10000);
+    }, 20000);
   }
   
   let posterCycleInterval = null;
@@ -204,7 +204,7 @@ function initPrayerTimes() {
       if (!overlay.style.display || overlay.style.display === 'none') {
         cyclePosters();
       }
-    }, 60000);
+    }, 25000);
   }
 
   function checkLiveStatusAndToggleOverlay() {
