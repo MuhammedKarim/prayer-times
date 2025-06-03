@@ -261,7 +261,7 @@ function initPrayerTimes() {
         }
 
         if (status.kalimat !== currentKalimat) {
-          const kalimatPath = `kalimat/${status.kalimat}.png`;
+          const kalimatPath = `kalimat/${status.kalimat}.png?t=${Date.now()}`;
           const img = new Image();
           kalimatImg.style.opacity = '0';
           img.onload = () => {
