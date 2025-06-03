@@ -132,6 +132,42 @@ body {
   object-fit: contain;
 }
 
+#kalimat-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 20;
+  transition: opacity 1.5s ease;
+  pointer-events: none;
+  display: none;
+  overflow: hidden;
+}
+
+#kalimat-overlay::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: var(--kalimat-url);
+  background-size: cover;
+  background-position: center;
+  filter: blur(35px);
+  transform: scale(1.1);
+  z-index: 0;
+}
+
+#kalimat-overlay .kalimat-img {
+  position: relative;
+  z-index: 1;
+  width: 100vw;
+  height: 100vh;
+  object-fit: contain;
+}
+
 #dim-overlay {
   position: fixed;
   top: 0;
