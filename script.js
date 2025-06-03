@@ -224,8 +224,8 @@ function initPrayerTimes() {
     fetch('https://live-status.muhammedkarim.workers.dev')
       .then(res => res.json())
       .then(status => {
-        const dimOverlay = document.getElementById('dim-overlay');
-        const shouldShowDim = status.isLive && status.kalimat !== 'kk-bayan';
+        // const dimOverlay = document.getElementById('dim-overlay');
+        // const shouldShowDim = status.isLive && status.kalimat !== 'kk-bayan';
         // dimOverlay.style.display = shouldShowDim ? 'block' : 'none';
         // dimOverlay.style.opacity = shouldShowDim ? '1' : '0';
         if (status.isLive) {
