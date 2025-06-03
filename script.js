@@ -39,7 +39,7 @@ function initPrayerTimes() {
   
     const today = new Date(todayStr);
     const day = today.getDay();
-    
+  
     const todayData = allData[todayStr];
   
     if (day === 4 && todayData?.dhuhr?.jamat) {
@@ -120,6 +120,7 @@ function initPrayerTimes() {
     });
   }
 
+
   const MAX_POSTERS = 5;
   let posterImages = [];
   let posterIndex = 0;
@@ -129,8 +130,8 @@ function initPrayerTimes() {
     const day = now.getDay();
     const minutes = now.getHours() * 60 + now.getMinutes();
 
-    if (day === 4 && minutes >= 1200) return true;
-    if (day === 5 && minutes <= 900) return true;
+    if (day === 4 && minutes >= 1260) return true;
+    if (day === 5 && minutes <= 840) return true;
     return false;
   }
 
@@ -207,20 +208,108 @@ function initPrayerTimes() {
     }, 60000);
   }
 
+  function stopPosterCycle() {
+    if (posterCycleInterval) {
+      clearInterval(posterCycleInterval);
+      posterCycleInterval = null;
+    }
+    const overlay = document.getElementById('poster-overlay');
+    overlay.style.opacity = '0';
+    setTimeout(() => {
+      overlay.style.display = 'none';
+    }, 1500);
+  }
+
   function checkLiveStatusAndToggleOverlay() {
     fetch('https://live-status.muhammedkarim.workers.dev')
       .then(res => res.json())
       .then(status => {
         const dimOverlay = document.getElementById('dim-overlay');
-
         const shouldShowDim = status.isLive && status.kalimat !== 'kk-bayan';
+        shouldShowDim = false;
         dimOverlay.style.display = shouldShowDim ? 'block' : 'none';
         dimOverlay.style.opacity = shouldShowDim ? '1' : '0';
-
+        if (status.isLive) {
+          stopPosterCycle();
+          startKalimatPolling();
+        } else {
+          stopKalimatPolling();
+          startPrayerPosterCycle();
+        }
       })
       .catch(err => {
         console.error('Failed to fetch live status:', err);
       });
+  }
+
+  let currentKalimat = null;
+  let kalimatInterval = null;
+
+  function fetchKalimatStatus() {
+    fetch('https://live-status.muhammedkarim.workers.dev')
+      .then(res => res.json())
+      .then(status => {
+        const kalimatOverlay = document.getElementById('kalimat-overlay');
+        const kalimatImg = kalimatOverlay.querySelector('.kalimat-img');
+
+        if (!status.isLive || !status.kalimat || status.kalimat === 'kk-bayan') {
+          kalimatOverlay.style.opacity = '0';
+          setTimeout(() => {
+            kalimatOverlay.style.display = 'none';
+          }, 1500);
+          currentKalimat = null;
+          return;
+        }
+
+        if (status.kalimat !== currentKalimat) {
+          const kalimatPath = `kalimat/${status.kalimat}.png`;
+          const img = new Image();
+
+          img.onload = () => {
+            kalimatImg.src = kalimatPath;
+            kalimatOverlay.style.setProperty('--kalimat-url', `url(${kalimatPath})`);
+            kalimatOverlay.style.display = 'block';
+            setTimeout(() => {
+              kalimatOverlay.style.opacity = '1';
+            }, 10);
+            currentKalimat = status.kalimat;
+          };
+
+          img.onerror = () => {
+            console.warn(`Missing kalimat image: ${kalimatPath}`);
+            kalimatOverlay.style.opacity = '0';
+            setTimeout(() => {
+              kalimatOverlay.style.display = 'none';
+            }, 1500);
+            currentKalimat = null;
+          };
+
+          img.src = kalimatPath;
+        } else {
+          kalimatOverlay.style.display = 'block';
+          kalimatOverlay.style.opacity = '1';
+        }
+      })
+      .catch(err => {
+        console.error('Failed to fetch kalimat:', err);
+      });
+  }
+
+  function startKalimatPolling() {
+    if (!kalimatInterval) {
+      kalimatInterval = setInterval(fetchKalimatStatus, 1000);
+    }
+  }
+
+  function stopKalimatPolling() {
+    clearInterval(kalimatInterval);
+    kalimatInterval = null;
+    currentKalimat = null;
+    const overlay = document.getElementById('kalimat-overlay');
+    overlay.style.opacity = '0';
+    setTimeout(() => {
+      overlay.style.display = 'none';
+    }, 1500);
   }
 
   function fetchPrayerTimes() {
