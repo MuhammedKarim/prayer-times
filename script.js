@@ -225,7 +225,7 @@ function initPrayerTimes() {
       .then(res => res.json())
       .then(status => {
         // const dimOverlay = document.getElementById('dim-overlay');
-        // const shouldShowDim = status.isLive && status.kalimat !== 'kk-bayan';
+        // const shouldShowDim = status.isLive && status.kalimat == 'Muraaqabah';
         // dimOverlay.style.display = shouldShowDim ? 'block' : 'none';
         // dimOverlay.style.opacity = shouldShowDim ? '1' : '0';
         if (status.isLive) {
@@ -251,7 +251,7 @@ function initPrayerTimes() {
         const kalimatOverlay = document.getElementById('kalimat-overlay');
         const kalimatImg = kalimatOverlay.querySelector('.kalimat-img');
 
-        if (!status.isLive || !status.kalimat || status.kalimat === 'kk-bayan') {
+        if (!status.isLive || !status.kalimat) {
           kalimatOverlay.style.opacity = '0';
           setTimeout(() => {
             kalimatOverlay.style.display = 'none';
@@ -263,26 +263,26 @@ function initPrayerTimes() {
         if (status.kalimat !== currentKalimat) {
           const kalimatPath = `kalimat/${status.kalimat}.png`;
           const img = new Image();
-
+          kalimatImg.style.opacity = '0';
           img.onload = () => {
-            kalimatImg.src = kalimatPath;
-            kalimatOverlay.style.setProperty('--kalimat-url', `url(${kalimatPath})`);
-            kalimatOverlay.style.display = 'block';
             setTimeout(() => {
+              kalimatImg.src = kalimatPath;
+              kalimatOverlay.style.setProperty('--kalimat-url', `url(${kalimatPath})`);
+              kalimatOverlay.style.display = 'block';
+              kalimatImg.style.opacity = '1';
               kalimatOverlay.style.opacity = '1';
-            }, 10);
-            currentKalimat = status.kalimat;
+              currentKalimat = status.kalimat;
+            }, 500);
           };
-
           img.onerror = () => {
             console.warn(`Missing kalimat image: ${kalimatPath}`);
             kalimatOverlay.style.opacity = '0';
+            kalimatImg.style.opacity = '0';
             setTimeout(() => {
               kalimatOverlay.style.display = 'none';
             }, 1500);
             currentKalimat = null;
           };
-
           img.src = kalimatPath;
         } else {
           kalimatOverlay.style.display = 'block';
