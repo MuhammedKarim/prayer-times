@@ -272,7 +272,7 @@ function initPrayerTimes() {
               kalimatImg.style.opacity = '1';
               kalimatOverlay.style.opacity = '1';
               currentKalimat = status.kalimat;
-            }, 500);
+            }, 200);
           };
           img.onerror = () => {
             console.warn(`Missing kalimat image: ${kalimatPath}`);
