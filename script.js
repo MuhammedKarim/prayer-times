@@ -263,18 +263,22 @@ function initPrayerTimes() {
         if (status.kalimat !== currentKalimat) {
           const kalimatPath = `kalimat/${status.kalimat}.png?t=${Date.now()}`;
           const img = new Image();
+          kalimatImg.style.opacity = '0'
           img.onload = () => {
-            kalimatImg.src = kalimatPath;
-            kalimatOverlay.style.setProperty('--kalimat-url', `url(${kalimatPath})`);
-            kalimatOverlay.style.display = 'block';
             setTimeout(() => {
+              kalimatImg.src = kalimatPath;
+              kalimatOverlay.style.setProperty('--kalimat-url', `url(${kalimatPath})`);
+              kalimatOverlay.style.display = 'block';
+              kalimatImg.style.opacity = '1';
               kalimatOverlay.style.opacity = '1';
-            }, 10);
+              currentKalimat = status.kalimat;
+            }, 250);
             currentKalimat = status.kalimat;
           };
           img.onerror = () => {
             console.warn(`Missing kalimat image: ${kalimatPath}`);
             kalimatOverlay.style.opacity = '0';
+            kalimatImg.style.opacity = '0';
             setTimeout(() => {
               kalimatOverlay.style.display = 'none';
             }, 1500);
