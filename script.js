@@ -293,7 +293,7 @@ function initPrayerTimes() {
 
   function startKalimatPolling() {
     if (!kalimatInterval) {
-      kalimatInterval = setInterval(fetchKalimatStatus, 1000);
+      kalimatInterval = setInterval(fetchKalimatStatus, 3000);
     }
   }
 
@@ -345,6 +345,6 @@ function initPrayerTimes() {
   setInterval(loadPrayerTimes, 60000);
   setInterval(fetchPrayerTimes, 300000);
   setInterval(refreshPosters, 300000);
-  setInterval(checkLiveStatusAndToggleOverlay, 5000);
+  //setInterval(checkLiveStatusAndToggleOverlay, 5000);
   setInterval(checkVersionAndReload, 60000);
 }
