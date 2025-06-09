@@ -221,7 +221,7 @@ function initPrayerTimes() {
   }
 
   function checkLiveStatusAndToggleOverlay() {
-    fetch('https://live-status.muhammedkarim.workers.dev')
+    fetch('https://live-test.muhammedkarim.workers.dev')
       .then(res => res.json())
       .then(status => {
         // const dimOverlay = document.getElementById('dim-overlay');
@@ -245,7 +245,7 @@ function initPrayerTimes() {
   let kalimatInterval = null;
 
   function fetchKalimatStatus() {
-    fetch('https://live-status.muhammedkarim.workers.dev')
+    fetch('https://live-test.muhammedkarim.workers.dev')
       .then(res => res.json())
       .then(status => {
         const kalimatOverlay = document.getElementById('kalimat-overlay');
@@ -261,7 +261,7 @@ function initPrayerTimes() {
         }
 
         if (status.kalimat !== currentKalimat) {
-          const kalimatPath = `kalimat/${status.kalimat}.png?t=${Date.now()}`;
+          const kalimatPath = `kalimat2/${status.kalimat}.png?t=${Date.now()}`;
           const img = new Image();
           img.onload = () => {
             kalimatImg.src = kalimatPath;
