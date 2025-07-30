@@ -26,7 +26,7 @@ body {
 .top {
   display: flex;
   flex-direction: column;
-  gap: 1vh;
+  gap: 0.5vh;
 }
 
 .clock {
@@ -39,7 +39,7 @@ body {
 }
 
 .divider {
-  margin:1vh auto;
+  margin:0.25vh auto;
   width: 70%;
   height: 0.3vh;
   background-color: white;

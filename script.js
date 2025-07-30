@@ -30,7 +30,9 @@ function initPrayerTimes() {
     else if (day === 3 || day === 23) suffix = 'rd';
   
     const formattedDate = `${weekday} ${day}${suffix} ${month}`;
+    var nowH = umalqura();
     document.getElementById('current-date').textContent = formattedDate.toUpperCase();
+    document.getElementById('arabic-date').textContent = nowH.format('d MMMM yyyy').toUpperCase() + ' AH';
   }
   
   function isJumuahPeriod(todayStr) {
