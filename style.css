@@ -20,7 +20,7 @@ body {
   text-align: center;
   display: flex;
   flex-direction: column;
-  gap: 2vh;
+  gap: 1.5vh;
 }
 
 .top {
