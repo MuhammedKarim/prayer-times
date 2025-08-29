@@ -132,6 +132,24 @@ body {
   object-fit: contain;
 }
 
+#makrooh-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: black;
+  z-index: 15;
+  display: none;
+  pointer-events: none;
+}
+
+#makrooh-overlay .makrooh-img {
+  width: 100vw;
+  height: 100vh;
+  object-fit: contain;
+}
+
 #kalimat-overlay {
   position: fixed;
   top: 0;

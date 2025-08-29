@@ -222,6 +222,35 @@ function initPrayerTimes() {
     }, 1500);
   }
 
+  let makroohShowing = false;
+
+  function checkMakroohPoster() {
+    const now = new Date();
+    const todayStr = now.getFullYear() + '-' +
+      String(now.getMonth() + 1).padStart(2, '0') + '-' +
+      String(now.getDate()).padStart(2, '0');
+
+    const dhuhrStartStr = allData[todayStr]?.dhuhr?.start;
+    if (!dhuhrStartStr) return;
+
+    const [h, m] = dhuhrStartStr.split(':').map(Number);
+    const dhuhrStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m);
+    const makroohStart = new Date(dhuhrStart.getTime() - 10 * 60000); // 10 mins before
+    const makroohEnd = new Date(dhuhrStart); // end at Dhuhr start
+
+    if (now >= makroohStart && now < makroohEnd) {
+      if (!makroohShowing) {
+        makroohShowing = true;
+        document.getElementById('makrooh-overlay').style.display = 'block';
+      }
+    } else {
+      if (makroohShowing) {
+        makroohShowing = false;
+        document.getElementById('makrooh-overlay').style.display = 'none';
+      }
+    }
+  }
+
   function checkLiveStatusAndToggleOverlay() {
     fetch('https://live-status.muhammedkarim.workers.dev')
       .then(res => res.json())
@@ -340,11 +369,13 @@ function initPrayerTimes() {
   fetchPrayerTimes();
   updateClock();
   loadPrayerTimes();
+  checkMakroohPoster();
   preloadAndCheckPosters();
   checkLiveStatusAndToggleOverlay();
   
   setInterval(updateClock, 1000);
   setInterval(loadPrayerTimes, 60000);
+  setInterval(checkMakroohPoster, 1000);
   setInterval(fetchPrayerTimes, 300000);
   setInterval(refreshPosters, 300000);
   setInterval(checkLiveStatusAndToggleOverlay, 5000);
