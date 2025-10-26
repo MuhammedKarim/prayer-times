@@ -122,6 +122,44 @@ function initPrayerTimes() {
     });
   }
 
+  function updateIshaWeekendHighlight() {
+    const el = document.getElementById('isha-jamat');
+    if (!el) return;
+
+    const now = new Date();
+    const friday = new Date(now);
+    while (friday.getDay() !== 5) friday.setDate(friday.getDate() - 1);
+    const sunday = new Date(friday);
+    sunday.setDate(friday.getDate() + 2);
+
+    const fridayStr = friday.getFullYear() + '-' +
+      String(friday.getMonth() + 1).padStart(2, '0') + '-' +
+      String(friday.getDate()).padStart(2, '0');
+
+    const sundayStr = sunday.getFullYear() + '-' +
+      String(sunday.getMonth() + 1).padStart(2, '0') + '-' +
+      String(sunday.getDate()).padStart(2, '0');
+
+    const fridayJamat = allData[fridayStr]?.isha?.jamat || allData[fridayStr]?.isha?.start;
+    const sundayJamat = allData[sundayStr]?.isha?.jamat || allData[sundayStr]?.isha?.start;
+
+    if (!fridayJamat || !sundayJamat) {
+      el.classList.remove('weekend-red');
+      return;
+    }
+
+    const [fH, fM] = fridayJamat.split(':').map(Number);
+    const [sH, sM] = sundayJamat.split(':').map(Number);
+    const friDate = new Date(friday.getFullYear(), friday.getMonth(), friday.getDate(), fH, fM);
+    const sunDate = new Date(sunday.getFullYear(), sunday.getMonth(), sunday.getDate(), sH, sM);
+
+    if (now >= friDate && now < sunDate) {
+      el.classList.add('weekend-red');
+    } else {
+      el.classList.remove('weekend-red');
+    }
+  }
+
 
   const MAX_POSTERS = 5;
   let posterImages = [];
@@ -393,6 +431,7 @@ function initPrayerTimes() {
       .then(data => {
         allData = data;
         loadPrayerTimes();
+        updateIshaWeekendHighlight();
       });
   }
   
@@ -423,6 +462,7 @@ function initPrayerTimes() {
   
   setInterval(updateClock, 1000);
   setInterval(loadPrayerTimes, 60000);
+  setInterval(updateIshaWeekendHighlight, 30000)
   setInterval(checkMakroohPoster, 1000);
   setInterval(checkFridayDuroodOverlay, 1000);
   setInterval(fetchPrayerTimes, 300000);

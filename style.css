@@ -96,6 +96,10 @@ body {
   text-align: center;
 }
 
+.weekend-red {
+  color:red;
+}
+
 #poster-overlay {
   position: fixed;
   top: 0;
