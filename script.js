@@ -290,7 +290,7 @@ function initPrayerTimes() {
   }
 
   function checkLiveStatusAndToggleOverlay() {
-    fetch('https://live-status.muhammedkarim.workers.dev')
+    fetch('http://sufi.org.uk/live-status')
       .then(res => res.json())
       .then(status => {
         // const dimOverlay = document.getElementById('dim-overlay');
@@ -314,7 +314,7 @@ function initPrayerTimes() {
   let kalimatInterval = null;
 
   function fetchKalimatStatus() {
-    fetch('https://live-status.muhammedkarim.workers.dev')
+    fetch('http://sufi.org.uk/live-status')
       .then(res => res.json())
       .then(status => {
         const kalimatOverlay = document.getElementById('kalimat-overlay');
@@ -330,6 +330,7 @@ function initPrayerTimes() {
         }
 
         if (status.kalimat !== currentKalimat) {
+          if (status.kalimat == 'blank' && currentKalimat == "Dua") status.kalimat = null
           const kalimatPath = `kalimat/${status.kalimat}.jpg?t=${Date.now()}`;
           const img = new Image();
           img.onload = () => {
@@ -377,7 +378,7 @@ function initPrayerTimes() {
     }, 1500);
   }
 
-    const FRI_DUROOD_URL = 'posters/fri_durood.jpg';
+  const FRI_DUROOD_URL = 'posters/fri_durood.jpg';
   let fridayDuroodShowing = false;
 
   function inFridayDuroodWindow() {
