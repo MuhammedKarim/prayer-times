@@ -48,7 +48,7 @@ body {
 .prayers {
   display: flex;
   flex-direction: column;
-  gap: 2vh;
+  gap: 0.2vh;
 }
 
 .prayer-row {
@@ -98,6 +98,47 @@ body {
 
 .weekend-red {
   color:red;
+}
+
+.dhikr-section {
+  position: absolute;
+  left: 50%;
+  bottom: 4.5vh;
+  transform: translateX(-50%);
+  width: 80vw;
+  font-weight: bold;
+}
+
+.dhikr-row {
+  display: flex;
+}
+
+.dhikr-header {
+  margin-bottom: 0.8vh;
+  font-size: 2vh;
+  color: #d4af37;
+}
+
+.dhikr-first-cell {
+  flex: 1.2;
+}
+
+.dhikr-header .dhikr-label {
+  flex: 1;
+  text-align: center;
+}
+
+.dhikr-values .dhikr-title {
+  flex: 1.2;
+  text-align: left;
+  font-size: 2.3vh;
+  color: #d4af37;
+}
+
+.dhikr-values .dhikr-time {
+  flex: 1;
+  text-align: center;
+  font-size: 3vh;
 }
 
 #poster-overlay {
