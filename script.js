@@ -290,7 +290,7 @@ function initPrayerTimes() {
   }
 
   function checkLiveStatusAndToggleOverlay() {
-    fetch('http://sufi.org.uk/live-status')
+    fetch('https://sufi.org.uk/live-status')
       .then(res => res.json())
       .then(status => {
         // const dimOverlay = document.getElementById('dim-overlay');
@@ -314,7 +314,7 @@ function initPrayerTimes() {
   let kalimatInterval = null;
 
   function fetchKalimatStatus() {
-    fetch('http://sufi.org.uk/live-status')
+    fetch('https://sufi.org.uk/live-status')
       .then(res => res.json())
       .then(status => {
         const kalimatOverlay = document.getElementById('kalimat-overlay');
