@@ -363,7 +363,7 @@ function initPrayerTimes() {
         }
 
         if (status.kalimat !== currentKalimat) {
-          if (status.kalimat == 'blank' && currentKalimat == "Dua") status.kalimat = null
+          if (status.kalimat === 'blank' && (currentKalimat === 'Dua' || currentKalimat === '')) status.kalimat = ''
           const kalimatPath = `kalimat/${status.kalimat}.jpg?t=${Date.now()}`;
           const img = new Image();
           img.onload = () => {
