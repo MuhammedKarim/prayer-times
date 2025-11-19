@@ -187,9 +187,9 @@ function initPrayerTimes() {
     .then(status => {
       dhikrData = status;
       if (!dhikrData) return;
-      document.getElementById("dhikr-morning").textContent = getDisplayTime("morning") || "12:00";
-      document.getElementById("dhikr-evening").textContent = getDisplayTime("evening") || "12:00";
-      // document.getElementById("dhikr-night").textContent =  getDisplayTime("night") || "12:00";
+      document.getElementById("dhikr-morning").textContent = formatTo12Hour(getDisplayTime("morning")) || "12:00";
+      document.getElementById("dhikr-evening").textContent = formatTo12Hour(getDisplayTime("evening")) || "12:00";
+      // document.getElementById("dhikr-night").textContent =  formatTo12Hour(getDisplayTime("night")) || "12:00";
     })
     .catch(err => console.error("Dhikr fetch error:", err));
 }

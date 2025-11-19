@@ -103,42 +103,39 @@ body {
 .dhikr-section {
   position: absolute;
   left: 50%;
-  bottom: 4.5vh;
+  bottom: 4vh;
   transform: translateX(-50%);
   width: 80vw;
+  display: flex;
+  align-items: center;
   font-weight: bold;
 }
 
-.dhikr-row {
+.dhikr-title {
+  flex: 1.2;
+  font-size: 3.3vh;
+  text-align: left;
+  color:#d4af37;
+}
+
+.dhikr-columns {
+  flex: 2;
   display: flex;
 }
 
-.dhikr-header {
-  margin-bottom: 0.8vh;
-  font-size: 2vh;
-  color: #d4af37;
-}
-
-.dhikr-first-cell {
-  flex: 1.2;
-}
-
-.dhikr-header .dhikr-label {
+.dhikr-col {
   flex: 1;
   text-align: center;
 }
 
-.dhikr-values .dhikr-title {
-  flex: 1.2;
-  text-align: left;
+.dhikr-label {
   font-size: 2.3vh;
   color: #d4af37;
+  margin-bottom: 1vh;
 }
 
-.dhikr-values .dhikr-time {
-  flex: 1;
-  text-align: center;
-  font-size: 3vh;
+.dhikr-time {
+  font-size: 3.3vh;
 }
 
 #poster-overlay {
