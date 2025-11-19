@@ -323,7 +323,7 @@ function initPrayerTimes() {
   }
 
   function checkLiveStatusAndToggleOverlay() {
-    fetch('https://sufi.org.uk/live-status')
+    fetch('https://live-test.muhammedkarim.workers.dev/')
       .then(res => res.json())
       .then(status => {
         // const dimOverlay = document.getElementById('dim-overlay');
@@ -347,7 +347,7 @@ function initPrayerTimes() {
   let kalimatInterval = null;
 
   function fetchKalimatStatus() {
-    fetch('https://sufi.org.uk/live-status')
+    fetch('https://live-test.muhammedkarim.workers.dev/')
       .then(res => res.json())
       .then(status => {
         const kalimatOverlay = document.getElementById('kalimat-overlay');
@@ -381,7 +381,8 @@ function initPrayerTimes() {
             setTimeout(() => {
               kalimatOverlay.style.display = 'none';
             }, 1500);
-            currentKalimat = null;
+            if (status.kalimat === '') currentKalimat = ''
+            else currentKalimat = null;
           };
           img.src = kalimatPath;
         } else {
