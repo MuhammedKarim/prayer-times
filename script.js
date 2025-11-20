@@ -352,7 +352,6 @@ function initPrayerTimes() {
       .then(status => {
         const kalimatOverlay = document.getElementById('kalimat-overlay');
         const kalimatImg = kalimatOverlay.querySelector('.kalimat-img');
-
         if (!status.isLive || !status.kalimat) {
           kalimatOverlay.style.opacity = '0';
           setTimeout(() => {
@@ -363,26 +362,21 @@ function initPrayerTimes() {
         }
 
         if (status.kalimat !== currentKalimat) {
-          if (status.kalimat === 'blank' && (currentKalimat === 'Dua' || currentKalimat === '')) status.kalimat = ''
+          if (kalimatImg.src.split('?')[0].endsWith('kalimat/background.jpg') && status.kalimat === 'blank') return
           const kalimatPath = `kalimat/${status.kalimat}.jpg?t=${Date.now()}`;
           const img = new Image();
           img.onload = () => {
             kalimatImg.src = kalimatPath;
             kalimatOverlay.style.setProperty('--kalimat-url', `url(${kalimatPath})`);
             kalimatOverlay.style.display = 'block';
-            setTimeout(() => {
-              kalimatOverlay.style.opacity = '1';
-            }, 10);
+            setTimeout(() => {kalimatOverlay.style.opacity = '1'}, 10);
             currentKalimat = status.kalimat;
           };
           img.onerror = () => {
             console.warn(`Missing kalimat image: ${kalimatPath}`);
             kalimatOverlay.style.opacity = '0';
-            setTimeout(() => {
-              kalimatOverlay.style.display = 'none';
-            }, 1500);
-            if (status.kalimat === '') currentKalimat = ''
-            else currentKalimat = null;
+            setTimeout(() => {kalimatOverlay.style.display = 'none'}, 1500);
+            currentKalimat = null;
           };
           img.src = kalimatPath;
         } else {
@@ -397,6 +391,13 @@ function initPrayerTimes() {
 
   function startKalimatPolling() {
     if (!kalimatInterval) {
+      const kalimatOverlay = document.getElementById('kalimat-overlay');
+      const kalimatImg = kalimatOverlay.querySelector('.kalimat-img');
+      const bgPath = `kalimat/background.jpg?t=${Date.now()}`
+      kalimatImg.src = bgPath
+      kalimatOverlay.style.setProperty('--kalimat-url', `url(${bgPath})`)
+      kalimatOverlay.style.display = 'block'
+      setTimeout(() => {kalimatOverlay.style.opacity = '1'}, 10);
       kalimatInterval = setInterval(fetchKalimatStatus, 1000);
     }
   }
