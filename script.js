@@ -203,7 +203,7 @@ function initPrayerTimes() {
     const day = now.getDay();
     const minutes = now.getHours() * 60 + now.getMinutes();
 
-    if (day === 4 && minutes >= 1260) return true;
+    if (day === 4 && minutes >= 1140) return true;
     if (day === 5 && minutes <= 840) return true;
     return false;
   }
