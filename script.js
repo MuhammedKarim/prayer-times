@@ -293,9 +293,9 @@ function initPrayerTimes() {
   let makroohShowing = false;
 
   function checkMakroohPoster() {
+    const now = new Date();
     const { todayStr, tomorrowStr } = getTodayTomorrowStr();
 
-    const now = new Date();
     const dhuhrStartStr = allData[todayStr]?.dhuhr?.start;
     if (!dhuhrStartStr) return;
 
