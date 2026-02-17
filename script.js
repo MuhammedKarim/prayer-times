@@ -543,5 +543,5 @@ function initPrayerTimes() {
   setInterval(refreshPosters, 300000);
   setInterval(checkLiveStatusAndToggleOverlay, 5000);
   setInterval(checkVersionAndReload, 60000);
-  setInterval(pollTaraweehStateAndApply, 10000);
+  setInterval(pollTaraweehStateAndApply, 5000);
 }
