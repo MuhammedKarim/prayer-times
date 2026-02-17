@@ -469,7 +469,7 @@ function initPrayerTimes() {
       base.setDate(base.getDate() + 1);
     }
     base.setHours(h, m, 0, 0);
-    const start = new Date(base.getTime() + 15 * 60000);
+    const start = new Date(base.getTime() + 15 * 60000 - 86400000);
     const end = new Date(start.getTime() + 90 * 60000);
     return now >= start && now < end;
   }
