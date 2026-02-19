@@ -318,6 +318,18 @@ function initPrayerTimes() {
   }
 
   function checkLiveStatusAndToggleOverlay() {
+    const now = new Date();
+    const { todayStr, tomorrowStr } = getTodayTomorrowStr();
+    const maghribStartStr = allData[todayStr]?.maghrib?.start;
+    const [h, m] = maghribStartStr.split(':').map(Number);
+    const maghribStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m);
+    const windowStart = new Date(maghribStart.getTime() - 2 * 60000);
+    const windowEnd = new Date(windowStart.getTime() + 20 * 60000);
+    if (now >= windowStart && now <= windowEnd) {
+      stopKalimatPolling();
+      startPrayerPosterCycle();
+      return;
+    }
     fetch('https://live-status.muhammedkarim.workers.dev/')
       .then(res => res.json())
       .then(status => {
@@ -532,7 +544,7 @@ function initPrayerTimes() {
   checkDhikr();
   checkMakroohPoster();
   preloadAndCheckPosters();
-  checkLiveStatusAndToggleOverlay();
+  // checkLiveStatusAndToggleOverlay();
   pollTaraweehStateAndApply();
   
   setInterval(updateClock, 1000);
