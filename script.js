@@ -516,6 +516,7 @@ function initPrayerTimes() {
       .then(data => {
         allData = data;
         loadPrayerTimes();
+        // updateIshaWeekendHighlight();
       });
   }
   
@@ -549,7 +550,7 @@ function initPrayerTimes() {
   setInterval(updateClock, 1000);
   setInterval(loadPrayerTimes, 60000);
   setInterval(checkDhikr, 60000);
-  setInterval(updateIshaWeekendHighlight, 30000);
+  // setInterval(updateIshaWeekendHighlight, 30000);
   setInterval(checkMakroohPoster, 1000);
   setInterval(checkFridayDuroodOverlay, 1000);
   setInterval(fetchPrayerTimes, 300000);
@@ -559,3 +560,4 @@ function initPrayerTimes() {
   setInterval(pollTaraweehStateAndApply, 1000);
 
 }
+
