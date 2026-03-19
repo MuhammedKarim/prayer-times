@@ -103,7 +103,7 @@ body {
 .dhikr-section {
   position: absolute;
   left: 50%;
-  bottom: 4.5vh;
+  bottom: 4vh;
   transform: translateX(-50%);
   width: 80vw;
   display: flex;
@@ -112,8 +112,8 @@ body {
 }
 
 .dhikr-title {
-  flex: 1;
-  font-size: 2.8vh;
+  flex: 1.2;
+  font-size: 3vh;
   text-align: left;
   color:#d4af37;
 }
@@ -129,13 +129,13 @@ body {
 }
 
 .dhikr-label {
-  font-size: 2vh;
+  font-size: 2.3vh;
   color: #d4af37;
   margin-bottom: 1vh;
 }
 
 .dhikr-time {
-  font-size: 3vh;
+  font-size: 3.3vh;
 }
 
 #poster-overlay {
