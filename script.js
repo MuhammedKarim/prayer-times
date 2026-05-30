@@ -650,7 +650,7 @@ function initPrayerTimes() {
   checkDhikr();
   checkMakroohPoster();
   preloadAndCheckPosters();
-  checkTakbirOverlay();
+  // checkTakbirOverlay();
   // checkLiveStatusAndToggleOverlay();
   // pollTaraweehStateAndApply();
   
@@ -664,6 +664,6 @@ function initPrayerTimes() {
   setInterval(refreshPosters, 1000000);
   setInterval(checkLiveStatusAndToggleOverlay, 5000);
   setInterval(checkVersionAndReload, 60000);
-  setInterval(checkTakbirOverlay, 1000);
+  // setInterval(checkTakbirOverlay, 1000);
   // setInterval(pollTaraweehStateAndApply, 1000);
 }
