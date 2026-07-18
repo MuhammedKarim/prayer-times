@@ -27,7 +27,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.5vh;
-  margin: 5vh auto 2vh 23vw;
+  margin: 5vh auto 2vh 20vw;
 }
 
 .clock {
