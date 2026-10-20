@@ -467,7 +467,7 @@ function initPrayerTimes() {
       kalimatOverlay.style.setProperty('--kalimat-url', `url(${bgPath})`)
       kalimatOverlay.style.display = 'block'
       setTimeout(() => {kalimatOverlay.style.opacity = '1'}, 10);
-      kalimatInterval = setInterval(fetchKalimatStatus, 1000);
+      kalimatInterval = setInterval(fetchKalimatStatus, 5000);
     }
   }
 
