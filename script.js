@@ -379,106 +379,207 @@ function initPrayerTimes() {
     }
   }
 
-  function checkLiveStatusAndToggleOverlay() {
+  const LIVE_STATUS_URL = 'https://live-status.muhammedkarim.workers.dev/';
+  const LIVE_STATUS_TIMEOUT_MS = 4000;
+  const OFFLINE_CONFIRMATIONS_REQUIRED = 2;
+
+  let consecutiveOfflineResponses = 0;
+  let liveStatusCheckInProgress = false;
+  let kalimatRequestInProgress = false;
+  let currentKalimat = null;
+  let kalimatInterval = null;
+  let kalimatHideTimeout = null;
+  let kalimatGeneration = 0;
+  let kalimatImageRequestId = 0;
+  let pendingKalimat = null;
+
+  // Only a valid response is allowed to change what's shown on screen.
+  // Network failures, timeouts, HTTP errors or malformed JSON leave it untouched.
+  async function getValidLiveStatus() {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), LIVE_STATUS_TIMEOUT_MS);
+
+    try {
+      const response = await fetch(LIVE_STATUS_URL, {
+        cache: 'no-store',
+        signal: controller.signal
+      });
+
+      if (!response.ok) {
+        throw new Error(`Live-status API returned HTTP ${response.status}`);
+      }
+
+      const status = await response.json();
+      if (!status || typeof status.isLive !== 'boolean' ||
+          (status.isLive && (typeof status.kalimat !== 'string' || !status.kalimat.trim()))) {
+        throw new Error('Invalid live-status API response');
+      }
+      return status;
+    } finally {
+      clearTimeout(timeout);
+    }
+  }
+
+  function isMaghribPosterWindow() {
     const now = new Date();
-    const { todayStr, tomorrowStr } = getTodayTomorrowStr();
+    const { todayStr } = getTodayTomorrowStr();
     const maghribStartStr = allData[todayStr]?.maghrib?.start;
+    if (!maghribStartStr) return false;
+
     const [h, m] = maghribStartStr.split(':').map(Number);
+    if (!Number.isFinite(h) || !Number.isFinite(m)) return false;
+
     const maghribStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m);
     const windowStart = new Date(maghribStart.getTime() - 2 * 60000);
     const windowEnd = new Date(windowStart.getTime() + 20 * 60000);
-    if (now >= windowStart && now <= windowEnd) {
-      stopKalimatPolling();
+    return now >= windowStart && now <= windowEnd;
+  }
+
+  async function checkLiveStatusAndToggleOverlay() {
+    // Preserve the existing scheduled Maghrib poster override.
+    if (isMaghribPosterWindow()) {
+      consecutiveOfflineResponses = 0;
+      if (kalimatInterval) stopKalimatPolling();
       startPrayerPosterCycle();
       return;
     }
-    fetch('https://live-status.muhammedkarim.workers.dev/')
-      .then(res => res.json())
-      .then(status => {
-        // const dimOverlay = document.getElementById('dim-overlay');
-        // const shouldShowDim = status.isLive && status.kalimat == 'Muraaqabah';
-        // dimOverlay.style.display = shouldShowDim ? 'block' : 'none';
-        // dimOverlay.style.opacity = shouldShowDim ? '1' : '0';
-        if (status.isLive) {
+
+    // Don't let delayed older replies overwrite a more recent result.
+    if (liveStatusCheckInProgress) return;
+    liveStatusCheckInProgress = true;
+
+    try {
+      const status = await getValidLiveStatus();
+      if (isMaghribPosterWindow()) return;
+
+      if (status.isLive) {
+        consecutiveOfflineResponses = 0;
+        if (!kalimatInterval) {
           stopPosterCycle();
           startKalimatPolling();
-        } else {
+        }
+      } else {
+        // An isolated false result must not flicker the display back.
+        consecutiveOfflineResponses++;
+        if (consecutiveOfflineResponses >= OFFLINE_CONFIRMATIONS_REQUIRED && kalimatInterval) {
           stopKalimatPolling();
           startPrayerPosterCycle();
         }
-      })
-      .catch(err => {
-        console.error('Failed to fetch live status:', err);
-      });
-  }
-
-  let currentKalimat = null;
-  let kalimatInterval = null;
-
-  function fetchKalimatStatus() {
-    fetch('https://live-status.muhammedkarim.workers.dev/')
-      .then(res => res.json())
-      .then(status => {
-        const kalimatOverlay = document.getElementById('kalimat-overlay');
-        const kalimatImg = kalimatOverlay.querySelector('.kalimat-img');
-        if (!status.isLive || !status.kalimat) {
-          kalimatOverlay.style.opacity = '0';
-          setTimeout(() => {
-            kalimatOverlay.style.display = 'none';
-          }, 1500);
-          currentKalimat = null;
-          return;
-        }
-
-        if (status.kalimat !== currentKalimat) {
-          if (kalimatImg.src.split('?')[0].endsWith('kalimat/background.jpg') && status.kalimat === 'blank') return
-          const kalimatPath = `kalimat/${status.kalimat}.jpg?t=${Date.now()}`;
-          const img = new Image();
-          img.onload = () => {
-            kalimatImg.src = kalimatPath;
-            kalimatOverlay.style.setProperty('--kalimat-url', `url(${kalimatPath})`);
-            kalimatOverlay.style.display = 'block';
-            setTimeout(() => {kalimatOverlay.style.opacity = '1'}, 10);
-            currentKalimat = status.kalimat;
-          };
-          img.onerror = () => {
-            console.warn(`Missing kalimat image: ${kalimatPath}`);
-            kalimatOverlay.style.opacity = '0';
-            setTimeout(() => {kalimatOverlay.style.display = 'none'}, 1500);
-            currentKalimat = null;
-          };
-          img.src = kalimatPath;
-        } else {
-          kalimatOverlay.style.display = 'block';
-          kalimatOverlay.style.opacity = '1';
-        }
-      })
-      .catch(err => {
-        console.error('Failed to fetch kalimat:', err);
-      });
-  }
-
-  function startKalimatPolling() {
-    if (!kalimatInterval) {
-      const kalimatOverlay = document.getElementById('kalimat-overlay');
-      const kalimatImg = kalimatOverlay.querySelector('.kalimat-img');
-      const bgPath = `kalimat/background.jpg?t=${Date.now()}`
-      kalimatImg.src = bgPath
-      kalimatOverlay.style.setProperty('--kalimat-url', `url(${bgPath})`)
-      kalimatOverlay.style.display = 'block'
-      setTimeout(() => {kalimatOverlay.style.opacity = '1'}, 10);
-      kalimatInterval = setInterval(fetchKalimatStatus, 5000);
+      }
+    } catch (err) {
+      // Keep the last known state, including any Kalimat currently displayed.
+      console.error('Failed to fetch live status; keeping existing display:', err);
+    } finally {
+      liveStatusCheckInProgress = false;
     }
   }
 
+  async function fetchKalimatStatus() {
+    if (!kalimatInterval || kalimatRequestInProgress) return;
+    kalimatRequestInProgress = true;
+    const generation = kalimatGeneration;
+
+    try {
+      const status = await getValidLiveStatus();
+      if (!kalimatInterval || generation !== kalimatGeneration || isMaghribPosterWindow()) return;
+
+      // Only the main live-status poll can stop the live overlay.
+      // A failed, incomplete or isolated offline Kalimat poll changes nothing.
+      if (!status.isLive) return;
+      if (typeof status.kalimat !== 'string' || !status.kalimat.trim()) {
+        throw new Error('Missing or invalid Kalimat value');
+      }
+
+      const kalimatOverlay = document.getElementById('kalimat-overlay');
+      const kalimatImg = kalimatOverlay.querySelector('.kalimat-img');
+      if (pendingKalimat === status.kalimat) return;
+      const imageRequestId = ++kalimatImageRequestId;
+      pendingKalimat = null;
+      if (status.kalimat === 'blank' && (currentKalimat === 'Dua' || currentKalimat === '')) {
+        // A confirmed blank after dua intentionally reveals the prayer timetable.
+        currentKalimat = '';
+        stopPosterCycle();
+        kalimatOverlay.style.opacity = '0';
+        if (kalimatHideTimeout) clearTimeout(kalimatHideTimeout);
+        kalimatHideTimeout = setTimeout(() => {
+          if (generation === kalimatGeneration && currentKalimat === '') {
+            kalimatOverlay.style.display = 'none';
+          }
+          kalimatHideTimeout = null;
+        }, 1500);
+        return;
+      }
+      if (status.kalimat !== currentKalimat) {
+        if (kalimatImg.src.split('?')[0].endsWith('kalimat/background.jpg') && status.kalimat === 'blank') return;
+
+        const kalimatPath = `kalimat/${status.kalimat}.jpg?t=${Date.now()}`;
+        pendingKalimat = status.kalimat;
+        const img = new Image();
+        img.onload = () => {
+          if (!kalimatInterval || generation !== kalimatGeneration ||
+              imageRequestId !== kalimatImageRequestId) return;
+          pendingKalimat = null;
+
+          if (kalimatHideTimeout) clearTimeout(kalimatHideTimeout);
+          kalimatHideTimeout = null;
+          kalimatImg.src = kalimatPath;
+          kalimatOverlay.style.setProperty('--kalimat-url', `url(${kalimatPath})`);
+          kalimatOverlay.style.display = 'block';
+          kalimatOverlay.style.opacity = '1';
+          currentKalimat = status.kalimat;
+        };
+        img.onerror = () => {
+          if (imageRequestId === kalimatImageRequestId) pendingKalimat = null;
+          // Keep the last image or background instead of showing prayer times.
+          console.warn(`Missing Kalimat image; keeping existing display: ${kalimatPath}`);
+        };
+        img.src = kalimatPath;
+      } else {
+        kalimatOverlay.style.display = 'block';
+        kalimatOverlay.style.opacity = '1';
+      }
+    } catch (err) {
+      console.error('Failed to fetch Kalimat; keeping existing display:', err);
+    } finally {
+      kalimatRequestInProgress = false;
+    }
+  }
+
+  function startKalimatPolling() {
+    if (kalimatInterval) return;
+
+    if (kalimatHideTimeout) {
+      clearTimeout(kalimatHideTimeout);
+      kalimatHideTimeout = null;
+    }
+
+    const kalimatOverlay = document.getElementById('kalimat-overlay');
+    const kalimatImg = kalimatOverlay.querySelector('.kalimat-img');
+    const bgPath = `kalimat/background.jpg?t=${Date.now()}`;
+    kalimatImg.src = bgPath;
+    kalimatOverlay.style.setProperty('--kalimat-url', `url(${bgPath})`);
+    kalimatOverlay.style.display = 'block';
+    kalimatOverlay.style.opacity = '1';
+
+    kalimatInterval = setInterval(fetchKalimatStatus, 1000);
+  }
+
   function stopKalimatPolling() {
+    if (!kalimatInterval) return;
+
     clearInterval(kalimatInterval);
     kalimatInterval = null;
     currentKalimat = null;
+    kalimatGeneration++;
+    kalimatImageRequestId++;
+    pendingKalimat = null;
+
     const overlay = document.getElementById('kalimat-overlay');
     overlay.style.opacity = '0';
-    setTimeout(() => {
-      overlay.style.display = 'none';
+    if (kalimatHideTimeout) clearTimeout(kalimatHideTimeout);
+    kalimatHideTimeout = setTimeout(() => {
+      if (!kalimatInterval) overlay.style.display = 'none';
+      kalimatHideTimeout = null;
     }, 1500);
   }
 
